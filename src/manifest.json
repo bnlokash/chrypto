@@ -27,7 +27,7 @@
       ]
     }
   ],
-  "permission": [
+  "permissions": [
     "storage"
   ],
   "devtools_page": "devtools.html",

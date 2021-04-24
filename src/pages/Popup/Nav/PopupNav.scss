@@ -1,0 +1,19 @@
+.popupNav {
+  list-style: none;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin: 20px;
+  padding: 0;
+
+  li {
+    display: block;
+    padding: 10px;
+    background: rgb(223, 223, 223);
+    cursor: pointer;
+  }
+
+  li:hover, li.active {
+    background: rgb(150, 149, 149);
+  }
+}
