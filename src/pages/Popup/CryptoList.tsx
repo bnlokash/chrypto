@@ -7,7 +7,7 @@ import './CryptoList.scss'
 type CryptoListProps = {};
 
 const CryptoList: React.FC<CryptoListProps> = () => {
-  const { data } = useSWR('https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest?limit=10', cmcFetcher)
+  const { data } = useSWR('https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest?limit=100', cmcFetcher)
 
   const [meta, setMeta] = useState()
   useEffect(() => {

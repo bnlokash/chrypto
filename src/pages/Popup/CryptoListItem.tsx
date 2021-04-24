@@ -43,16 +43,16 @@ const CryptoListItem: React.FC<CryptoListItemProps> = ({ coin, meta }) => {
                         src={meta.logo}>
                     </img>}
 
-                {coin.name}
+                <div>{coin.name}</div>
             </div>
         </td>
         <td>
             ${Number(parseFloat(quote.price).toFixed(2)).toLocaleString('en', { minimumFractionDigits: 2 })}
         </td>
-        <td>
+        <td className="change">
             <PercentChange change={quote.percent_change_24h} />
         </td>
-        <td>
+        <td className="change">
             <PercentChange change={quote.percent_change_7d} />
         </td>
         <td>

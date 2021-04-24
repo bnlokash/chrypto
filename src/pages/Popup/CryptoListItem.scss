@@ -3,11 +3,22 @@ td {
 }
 
 .icon-and-name {
-    display:flex;
+    display: flex;
     flex-direction: row;
     align-items: center;
     
     img {
         margin-right: 5px;
     }
+
+    div {
+        white-space: nowrap;
+        overflow: hidden;
+        max-width: 90px;
+        text-overflow: ellipsis;
+    }
+}
+
+.change {
+    min-width: 50px;
 }
