@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import useSWR from "swr";
 import { cmcFetcher } from '../../services/fetcher';
-import CryptoDiagram from './CryptoDiagram/CryptoDiagram';
+import CryptoListItem from './CryptoListItem'
 
 type CryptoListProps = {};
 
 const CryptoList: React.FC<CryptoListProps> = () => {
-  const { data } = useSWR('https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest?limit=5', cmcFetcher)
+  const { data } = useSWR('https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest?limit=10', cmcFetcher)
 
   const [meta, setMeta] = useState()
   useEffect(() => {
@@ -20,14 +20,21 @@ const CryptoList: React.FC<CryptoListProps> = () => {
 
   return (
     <div>
-      {data?.map((coin: any) => (
-        <div key={coin.id}>
-          {meta?.[coin.id] && <img style={{ height: '12px', width: '12px' }} src={(meta?.[coin.id] as any).logo}></img>}
-
-          {coin.name}: {coin.quote.USD.price.toFixed(2)} USD
-          <CryptoDiagram coin={coin} />
-        </div>
-      ))}
+      <table>
+        <thead>
+          <th>Name</th>
+          <th>Price USD</th>
+          <th>24h%</th>
+          <th>7d%</th>
+          <th>Volume (24h)</th>
+          <th>Last 7 Days</th>
+        </thead>
+        <tbody>
+          {data?.map((coin: any) => (
+            <CryptoListItem coin={coin} meta={meta?.[coin.id]} key={coin.id} />
+          ))}
+        </tbody>
+      </table>
     </div>
   )
 }
