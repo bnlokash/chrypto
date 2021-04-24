@@ -24,7 +24,14 @@ const Portfolio: React.FC<PortfolioProps> = ({ setPage }) => {
 
   return (
     <div>
-      <h4>Portfolio</h4>
+      <h3>Portfolio</h3>
+
+      <h4>Total: 
+      
+      {holdings.reduce(
+        (prev, current) => prev + current.amount * ((Object.values(data ?? {}).find((d: any) => d.slug === current.slug) as any)?.quote?.USD.price),
+        0
+      ).toFixed(2)} USD</h4>
 
       {Object.values(data ?? {}).map((coin: any) => (
         <PortfolioHolding key={coin.id} coin={coin} holding={holdings.find(h => h.slug === coin.slug) as Holding} />
