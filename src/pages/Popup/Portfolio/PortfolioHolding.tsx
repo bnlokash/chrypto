@@ -1,5 +1,6 @@
 import React from 'react'
 import { Holding } from '../../../types/settings.types'
+import CryptoDiagram from '../CryptoDiagram/CryptoDiagram'
 
 type PortfolioHoldingProps = {
   holding: Holding
@@ -12,6 +13,8 @@ const PortfolioHolding: React.FC<PortfolioHoldingProps> = ({ holding, coin }) =>
       {coin.name}:
       {holding.amount} {coin.symbol} / {' '}
       {(coin.quote?.USD.price * holding.amount).toFixed(2)} USD
+
+      <CryptoDiagram coin={coin} />
     </div>
   )
 }

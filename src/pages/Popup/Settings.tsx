@@ -2,8 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { Holding } from '../../types/settings.types';
 import { v4 as uuidv4 } from 'uuid'
 import ReactSelect from 'react-select/async-creatable'
-import secrets from 'secrets'
-import { fetcher } from '../../fetcher';
+import { cmcFetcher } from '../../services/fetcher';
 
 type SettingsProps = {}
 
@@ -68,7 +67,7 @@ const Settings: React.FC<SettingsProps> = () => {
           <ReactSelect
             value={{ slug: holding.slug, name: holding.slug }}
             cacheOptions
-            loadOptions={() => fetcher('https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest')}
+            loadOptions={() => cmcFetcher('https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest')}
             getOptionValue={option => option.slug} getOptionLabel={option => option.name}
             onChange={(v: any) => setHoldingValue(holding, 'slug', v?.slug)}
           />
