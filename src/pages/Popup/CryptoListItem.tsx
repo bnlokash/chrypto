@@ -1,4 +1,5 @@
 import React from 'react'
+import './CryptoListItem.scss'
 type CryptoListItemProps = { coin: any, meta: any };
 
 const PercentChange = (props: { change: number }) => {
@@ -31,19 +32,19 @@ function nFormatter(num: number, digits: number) {
 }
 
 const CryptoListItem: React.FC<CryptoListItemProps> = ({ coin, meta }) => {
-    console.log('meta', meta)
-    console.log('coin', coin)
     const quote = coin.quote.USD
 
-    return <tr style={{ height: '24px' }}>
+    return <tr>
         <td>
-            {meta &&
-                <img
-                    style={{ height: '12px', width: '12px' }}
-                    src={meta.logo}>
-                </img>}
+            <div className="icon-and-name">
+                {meta &&
+                    <img
+                        style={{ height: '24px', width: '24px' }}
+                        src={meta.logo}>
+                    </img>}
 
-            {coin.name}
+                {coin.name}
+            </div>
         </td>
         <td>
             ${Number(parseFloat(quote.price).toFixed(2)).toLocaleString('en', { minimumFractionDigits: 2 })}

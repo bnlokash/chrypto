@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import useSWR from "swr";
 import { cmcFetcher } from '../../services/fetcher';
 import CryptoListItem from './CryptoListItem'
+import './CryptoList.scss'
 
 type CryptoListProps = {};
 
@@ -27,7 +28,6 @@ const CryptoList: React.FC<CryptoListProps> = () => {
           <th>24h%</th>
           <th>7d%</th>
           <th>Volume (24h)</th>
-          <th>Last 7 Days</th>
         </thead>
         <tbody>
           {data?.map((coin: any) => (

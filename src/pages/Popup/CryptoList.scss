@@ -1,0 +1,11 @@
+table {
+  border-collapse: collapse;
+
+  tbody tr:nth-child(odd) {
+    background-color: #ccc;
+  }
+}
+
+td, th {
+    padding: 0.5rem;
+  }
