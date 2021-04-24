@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import useSWR from "swr";
-import secrets from 'secrets'
-
-const fetcher = (url: string) => fetch(url, { headers: { 'X-CMC_PRO_API_KEY': secrets.CMC_KEY } }).then(r => r.json().then(res => res.data))
-
+import { fetcher } from '../../fetcher';
 
 type CryptoListProps = {};
 
