@@ -17,11 +17,7 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "noEmit": false,
-    "jsx": "react",
-    "typeRoots": [
-      "src/types",
-      "node_modules/@types"
-    ]
+    "jsx": "react"
   },
   "include": [
     "src"
