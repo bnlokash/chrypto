@@ -11,7 +11,9 @@ type PortfolioProps = {
 const Portfolio: React.FC<PortfolioProps> = ({ setPage }) => {
   const [holdings, setHoldings] = useState<Holding[]>([]);
 
-  const { data } = useSWR(`https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?slug=${holdings.map(c => c.slug).join(',')}`, cmcFetcher)
+  const { data } = useSWR(holdings.length > 0 ?
+    `https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?slug=${holdings.map(c => c.slug).join(',')}`
+    : null, cmcFetcher)
 
   // fetch holdings from chrome storage
   useEffect(() => {

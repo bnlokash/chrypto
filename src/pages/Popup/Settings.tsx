@@ -1,16 +1,22 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { Holding } from '../../types/settings.types';
 import { v4 as uuidv4 } from 'uuid'
-import ReactSelect from 'react-select/async-creatable'
+import ReactSelect from 'react-select/async'
+import { components } from 'react-select'
 import { cmcFetcher } from '../../services/fetcher';
+import Fuse from 'fuse.js'
+import useSWR from "swr";
+import './Settings.scss'
 
 type SettingsProps = {}
 
 const Settings: React.FC<SettingsProps> = () => {
-
-
   const [holdings, setHoldings] = useState<Holding[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+
+  const { data: coins } = useSWR('https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest?limit=5000', cmcFetcher)
+  const fuse = new Fuse(coins, { keys: ['name'] })
+
 
   // fetch initial holdings from chrome storage
   useEffect(() => {
@@ -26,8 +32,8 @@ const Settings: React.FC<SettingsProps> = () => {
   }, [holdings])
 
 
-  const onAddHolding = useCallback(() => {
-    setHoldings(prev => ([...prev, { slug: 'bitcoin', amount: 0, key: uuidv4() }]))
+  const onAddHolding = useCallback((coin) => {
+    setHoldings(prev => ([...prev, { slug: coin.slug, amount: 0, key: uuidv4(), name: coin.name }]))
   }, []);
 
   const onRemoveHolding = useCallback((holding: Holding) => {
@@ -40,7 +46,7 @@ const Settings: React.FC<SettingsProps> = () => {
     })
   }, [])
 
-  const setHoldingValue = useCallback((holding: Holding, field: 'amount' | 'slug', value: string | number) => {
+  const setHoldingValue = useCallback((holding: Holding, field: 'amount' | 'slug' | 'name', value: string | number) => {
     setHoldings(prev => {
       const prevIndex = prev.findIndex(h => h.key === holding.key)
       return [
@@ -51,6 +57,27 @@ const Settings: React.FC<SettingsProps> = () => {
     })
   }, [])
 
+  const loadOptions = (input: string) => new Promise<any>((resolve, reject) => {
+    const matched = fuse.search(input)
+    const top = matched.map(m => m.item).slice(0, 9) as any
+    const ids = top.map((t: any) => t.id).sort((a: any, b: any) => a < b)
+    cmcFetcher(`https://pro-api.coinmarketcap.com/v1/cryptocurrency/info?id=${ids.join(',')}`).then(result => {
+      top.forEach((value: any, i: number) => {
+        top[i].meta = result[value.id]
+      })
+
+      resolve(top)
+    })
+  })
+
+  const Option = (props: any) => {
+    return (
+      <div className="option">
+        <img src={props?.data?.meta?.logo}></img>
+        <components.Option {...props} />
+      </div>
+    );
+  };
 
   return (
     <div>
@@ -65,11 +92,15 @@ const Settings: React.FC<SettingsProps> = () => {
 
           <label htmlFor={`coin_${holding.key}`}>Coin: </label>
           <ReactSelect
-            value={{ slug: holding.slug, name: holding.slug }}
-            cacheOptions
-            loadOptions={() => cmcFetcher('https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest')}
-            getOptionValue={option => option.slug} getOptionLabel={option => option.name}
-            onChange={(v: any) => setHoldingValue(holding, 'slug', v?.slug)}
+            components={{ Option }}
+            value={{ slug: holding.slug, name: holding.name }}
+            loadOptions={loadOptions}
+            getOptionValue={option => option.slug}
+            getOptionLabel={option => option.name}
+            onChange={(v: any) => {
+              setHoldingValue(holding, 'slug', v?.slug)
+              setHoldingValue(holding, 'name', v?.name)
+            }}
           />
 
           <label htmlFor={`amount_${holding.key}`}>Amount: </label>

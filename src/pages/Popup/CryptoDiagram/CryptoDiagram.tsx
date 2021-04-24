@@ -38,6 +38,10 @@ const CryptoDiagram: React.FC<CryptoDiagramProps> = ({ coin, holding }) => {
     },
   }), []);
 
+  if (!data || Object.entries(data).length === 0) {
+    return <p>Unable to get chart for {coin.name}</p>
+  }
+
   return (
     <Line data={chartData} options={chartOptions} type="line" />
   )

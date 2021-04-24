@@ -1,5 +1,6 @@
 export type Holding = {
   key: string
-  slug: string,
+  slug: string
   amount: number
+  name: string
 }
