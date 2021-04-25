@@ -1,0 +1,21 @@
+.portfolio {
+  padding: 5px;
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    button {
+      margin-left: 4px;
+      background: rgb(223, 223, 223);
+      padding: 4px 10px;
+      border: none;
+      cursor: pointer;
+    }
+  
+    button:hover, button.active {
+      background: rgb(150, 149, 149);
+    }
+  }
+}

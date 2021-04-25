@@ -5,17 +5,26 @@ import CryptoDiagram from '../CryptoDiagram/CryptoDiagram'
 type PortfolioHoldingProps = {
   holding: Holding
   setHoldingData: any
+  chartPeriod: string
   coin: any
+  meta: any
 }
 
-const PortfolioHolding: React.FC<PortfolioHoldingProps> = ({ holding, coin, setHoldingData }) => {
+const PortfolioHolding: React.FC<PortfolioHoldingProps> = ({ holding, coin, setHoldingData, meta, chartPeriod }) => {
   return (
     <div>
-      {coin.name}:
+      <div className="icon-and-name">
+        {meta &&
+          <img
+            style={{ height: '24px', width: '24px' }}
+            src={meta.logo}>
+          </img>}
+        {coin.name}:{' '}
+      </div>
       {holding.amount} {coin.symbol} / {' '}
       {(coin.quote?.USD.price * holding.amount).toFixed(2)} USD
 
-      <CryptoDiagram coin={coin} holding={holding} setHoldingData={setHoldingData} />
+      <CryptoDiagram coin={coin} holding={holding} setHoldingData={setHoldingData} chartPeriod={chartPeriod} />
     </div>
   )
 }

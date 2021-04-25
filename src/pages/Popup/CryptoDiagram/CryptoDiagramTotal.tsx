@@ -4,15 +4,16 @@ import { format } from 'date-fns';
 
 type CryptoDiagramTotalProps = {
   holdingData: { [key: string]: any }
+  chartPeriod: string
 }
 
-const CryptoDiagramTotal: React.FC<CryptoDiagramTotalProps> = ({ holdingData }) => {
+const CryptoDiagramTotal: React.FC<CryptoDiagramTotalProps> = ({ holdingData, chartPeriod = "1w" }) => {
   const chartData = useMemo(() => ({
-    labels: Object.values(holdingData ?? {})[0]?.Data.map((d: any) => format(new Date(d.time * 1000), 'MMM dd')),
+    labels: Object.values(holdingData ?? {})[0]?.Data.map((d: any) => format(new Date(d.time * 1000), (chartPeriod === '1w' || chartPeriod === '1m') ? 'MMM dd' : 'HH:00')),
     datasets: [
       {
         label: 'Total Portfolio',
-        data: Object.values(holdingData ?? {})[0]?.Data.map((_: any, key: any) => Object.values(holdingData).reduce((prev: any, current: any) => { console.log(current); return prev + current.Data[key].open * current.amount }, 0)),
+        data: Object.values(holdingData ?? {})[0]?.Data.map((_: any, key: any) => Object.values(holdingData).reduce((prev: any, current: any) => prev + current.Data[key]?.open * current.amount, 0)),
         fill: false,
         backgroundColor: 'rgb(0, 99, 132)',
         borderColor: 'rgba(0, 99, 132, 0.2)',

@@ -9,17 +9,20 @@ type CryptoDiagramProps = {
   coin: any
   holding?: Holding
   setHoldingData?: any
+  chartPeriod?: string
 }
 
-const CryptoDiagram: React.FC<CryptoDiagramProps> = ({ coin, holding, setHoldingData }) => {
-  const { data } = useSWR(`https://min-api.cryptocompare.com/data/v2/histoday?fsym=${coin.symbol}&tsym=USD&limit=10&aggregate=1`, ccFetcher)
+const CryptoDiagram: React.FC<CryptoDiagramProps> = ({ coin, holding, setHoldingData, chartPeriod = '1w' }) => {
+  const { data } = useSWR(`https://min-api.cryptocompare.com/data/v2/${chartPeriod === '24h' ? 'histohour' : 'histoday'
+    }?fsym=${coin.symbol}&tsym=USD&limit=${chartPeriod === '1w' ? 7 : chartPeriod === '1m' ? 30 : 24
+    }&aggregate=1`, ccFetcher)
 
   const chartData = useMemo(() => ({
-    labels: data?.Data?.map((d: any) => format(new Date(d.time * 1000), 'MMM dd')),
+    labels: data?.Data?.map((d: any) => format(new Date(d.time * 1000), (chartPeriod === '1w' || chartPeriod === '1m') ? 'MMM dd' : 'HH:00')),
     datasets: [
       {
         label: coin?.name,
-        data: data?.Data?.map((d: any) => holding ? d.open * holding.amount : d.open),
+        data: data?.Data?.map((d: any) => holding ? d?.open * holding.amount : d?.open),
         fill: false,
         backgroundColor: 'rgb(255, 99, 132)',
         borderColor: 'rgba(255, 99, 132, 0.2)',
