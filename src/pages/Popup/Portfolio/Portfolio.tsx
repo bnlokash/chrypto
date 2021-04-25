@@ -20,7 +20,7 @@ const Portfolio: React.FC<PortfolioProps> = ({ setPage }) => {
   // fetch holdings from chrome storage
   useEffect(() => {
     chrome.storage.sync.get('holdings', (value) => {
-      setHoldings(value.holdings ?? [])
+      setHoldings(value.holdings?.filter((h: any) => h.slug && h.amount) ?? [])
     });
   }, [])
 
