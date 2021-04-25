@@ -12,6 +12,7 @@ type SettingsProps = {}
 
 const Settings: React.FC<SettingsProps> = () => {
   const [holdings, setHoldings] = useState<Holding[]>([]);
+  const [favorites, setFavorites] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   const { data: coins } = useSWR('https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest?limit=5000', cmcFetcher)
@@ -20,16 +21,17 @@ const Settings: React.FC<SettingsProps> = () => {
 
   // fetch initial holdings from chrome storage
   useEffect(() => {
-    chrome.storage.sync.get('holdings', (value) => {
+    chrome.storage.sync.get(['holdings', 'favorites'], (value) => {
       setHoldings(value.holdings ?? [])
+      setFavorites(value.favorites ?? []);
       setIsLoading(false);
     });
   }, [])
 
   // sync holdings to chrome storage
   useEffect(() => {
-    chrome.storage.sync.set({ holdings });
-  }, [holdings])
+    chrome.storage.sync.set({ holdings, favorites });
+  }, [holdings, favorites])
 
 
   const onAddHolding = useCallback((coin) => {
@@ -59,7 +61,7 @@ const Settings: React.FC<SettingsProps> = () => {
 
   const loadOptions = (input: string) => new Promise<any>((resolve, reject) => {
     const matched = fuse.search(input)
-    const top = matched.map(m => m.item).slice(0, 9) as any
+    const top = input ? matched.map(m => m.item).slice(0, 9) as any : coins.slice(0, 9);
     const ids = top.map((t: any) => t.id).sort((a: any, b: any) => a < b)
     cmcFetcher(`https://pro-api.coinmarketcap.com/v1/cryptocurrency/info?id=${ids.join(',')}`).then(result => {
       top.forEach((value: any, i: number) => {
@@ -81,7 +83,21 @@ const Settings: React.FC<SettingsProps> = () => {
 
   return (
     <div>
-      <h4>Your Holdings</h4>
+      <h3>Favorites</h3>
+      <ReactSelect
+        defaultOptions
+        components={{ Option }}
+        value={favorites}
+        loadOptions={loadOptions}
+        getOptionValue={option => option.slug}
+        getOptionLabel={option => option.name}
+        onChange={(values: any) => {
+          setFavorites(values.map((v: any) => ({ slug: v.slug, id: v.id, name: v.name })))
+        }}
+        isMulti
+      />
+
+      <h3>Your Holdings</h3>
       {isLoading && (
         <p>Loading...</p>
       )}
@@ -92,6 +108,7 @@ const Settings: React.FC<SettingsProps> = () => {
 
           <label htmlFor={`coin_${holding.key}`}>Coin: </label>
           <ReactSelect
+            defaultOptions
             components={{ Option }}
             value={{ slug: holding.slug, name: holding.name }}
             loadOptions={loadOptions}

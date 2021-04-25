@@ -11,7 +11,8 @@ const Popup = () => {
   return (
     <div>
       <PopupNav page={page} setPage={setPage} />
-      {page === 'list' && <CryptoList />}
+      {page === 'list' && <CryptoList setPage={setPage} />}
+      {page === 'favorites' && <CryptoList setPage={setPage} isFavorites />}
       {page === 'portfolio' && <Portfolio setPage={setPage} />}
       {page === 'settings' && <Settings />}
     </div>
