@@ -13,7 +13,7 @@ type PortfolioProps = {
 const Portfolio: React.FC<PortfolioProps> = ({ setPage }) => {
   const [holdings, setHoldings] = useState<Holding[]>([]);
   const [holdingData, setHoldingData] = useState<{ [key: string]: any }>({});
-  const [chartPeriod, setChartPeriod] = useState('1w');
+  const [chartPeriod, setChartPeriod] = useState('1m');
 
   const { data } = useSWR(holdings.length > 0 ?
     `https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?slug=${holdings.map(c => c.slug).join(',')}`
