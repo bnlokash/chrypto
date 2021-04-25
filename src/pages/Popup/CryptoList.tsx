@@ -7,6 +7,7 @@ import './CryptoList.scss'
 type CryptoListProps = {};
 
 const CryptoList: React.FC<CryptoListProps> = () => {
+  const [page, setPage] = useState(0)
   const { data } = useSWR('https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest?limit=100', cmcFetcher)
 
   const [meta, setMeta] = useState()
@@ -30,11 +31,16 @@ const CryptoList: React.FC<CryptoListProps> = () => {
           <th>Volume (24h)</th>
         </thead>
         <tbody>
-          {data?.map((coin: any) => (
+          {data?.slice(page * 10, (page * 10) + 10).map((coin: any) => (
             <CryptoListItem coin={coin} meta={meta?.[coin.id]} key={coin.id} />
           ))}
         </tbody>
       </table>
+      <div className="buttons">
+        <div>{page * 10 + 1}- {(page * 10) + 10} / 100</div>
+        <button onClick={() => setPage(page - 1)} disabled={page === 0}>{'<'}</button>
+        <button onClick={() => setPage(page + 1)} disabled={page === 9}>{'>'}</button>
+      </div>
     </div>
   )
 }

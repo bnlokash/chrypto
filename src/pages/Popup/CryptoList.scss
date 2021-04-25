@@ -1,4 +1,5 @@
 table {
+  width: 100%;
   border-collapse: collapse;
 
   tbody tr:nth-child(odd) {
@@ -9,3 +10,15 @@ table {
 td, th {
     padding: 0.5rem;
   }
+
+.buttons {
+  display: flex;
+  align-items: flex-end;
+  margin-bottom: 8px;
+  button, div {
+    margin-right: 10px;
+  }
+  div {
+    margin-left: auto;
+  }
+}
