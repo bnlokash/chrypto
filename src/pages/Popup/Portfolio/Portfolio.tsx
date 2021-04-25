@@ -52,7 +52,7 @@ const Portfolio: React.FC<PortfolioProps> = ({ setPage }) => {
         {holdings.reduce(
           (prev, current) => prev + current.amount * ((Object.values(data ?? {}).find((d: any) => d.slug === current.slug) as any)?.quote?.USD.price),
           0
-        ).toFixed(2)} USD</h4>
+        ).toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</h4>
 
       <CryptoDiagramTotal holdingData={holdingData} chartPeriod={chartPeriod} />
 

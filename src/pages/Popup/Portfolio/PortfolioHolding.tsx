@@ -22,7 +22,7 @@ const PortfolioHolding: React.FC<PortfolioHoldingProps> = ({ holding, coin, setH
         {coin.name}:{' '}
       </div>
       {holding.amount} {coin.symbol} / {' '}
-      {(coin.quote?.USD.price * holding.amount).toFixed(2)} USD
+      {(coin.quote?.USD.price * holding.amount).toLocaleString('en-US', { style: 'currency', currency: 'USD' })}
 
       <CryptoDiagram coin={coin} holding={holding} setHoldingData={setHoldingData} chartPeriod={chartPeriod} />
     </div>
